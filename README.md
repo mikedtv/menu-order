@@ -44,7 +44,7 @@ cd menu-order
 
 2. Install dependencies for both frontend and backend:
 
-```
+```bash
 # Install frontend dependencies
 cd client
 npm install
@@ -60,7 +60,7 @@ npm install
 
 1. Start the backend server:
 
-```
+```bash
 cd server
 npm run dev
 ```
@@ -69,7 +69,7 @@ The API server will run on [http://localhost:3000](http://localhost:3000) with a
 
 2. In a new terminal, start the frontend:
 
-```
+```bash
 cd client
 npm run dev
 ```
@@ -80,14 +80,14 @@ The React app will run on [http://localhost:5173](http://localhost:5173). Vite i
 
 1. Build the frontend:
 
-```
+```bash
 cd client
 npm run build
 ```
 
 2. Start the production server:
 
-```
+```bash
 cd server
 npm start
 ```
