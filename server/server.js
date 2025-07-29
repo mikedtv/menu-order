@@ -26,14 +26,14 @@ server.register(fastifyStatic, {
 
 server.get("/api/meals", async function getMeals(req, res) {
   const mealsPromise = db.all(
-    "SELECT meal_type_id, name, category, ingredients as description FROM meal_types",
+    "SELECT meal_type_id, name, category, ingredients as description FROM meal_types"
   );
   const mealsizesPromise = db.all(
     `SELECT 
       meal_type_id as id, size, price
     FROM 
       meals
-  `,
+  `
   );
 
   const [meals, mealsizes] = await Promise.all([
@@ -66,7 +66,7 @@ server.get("/api/meal-of-the-day", async function getMealOfTheDay(req, res) {
     `SELECT 
       meal_type_id as id, name, category, ingredients as description
     FROM 
-      meal_types`,
+      meal_types`
   );
 
   const daysSinceEpoch = Math.floor(Date.now() / 86400000);
@@ -80,7 +80,7 @@ server.get("/api/meal-of-the-day", async function getMealOfTheDay(req, res) {
       meals
     WHERE
       meal_type_id = ?`,
-    [meal.id],
+    [meal.id]
   );
 
   const sizeObj = sizes.reduce((acc, current) => {
@@ -111,7 +111,7 @@ server.get("/api/order", async function getOrders(req, res) {
   const id = req.query.id;
   const orderPromise = db.get(
     "SELECT order_id, date, time FROM orders WHERE order_id = ?",
-    [id],
+    [id]
   );
   const orderItemsPromise = db.all(
     `SELECT 
@@ -128,7 +128,7 @@ server.get("/api/order", async function getOrders(req, res) {
       p.meal_type_id = t.meal_type_id
     WHERE 
       order_id = ?`,
-    [id],
+    [id]
   );
 
   const [order, orderItemsRes] = await Promise.all([
@@ -141,7 +141,7 @@ server.get("/api/order", async function getOrders(req, res) {
       image: `/public/img/${item.mealTypeId}.webp`,
       quantity: +item.quantity,
       price: +item.price,
-    }),
+    })
   );
 
   const total = orderItems.reduce((acc, item) => acc + item.total, 0);
@@ -170,7 +170,7 @@ server.post("/api/order", async function createOrder(req, res) {
 
     const result = await db.run(
       "INSERT INTO orders (date, time) VALUES (?, ?)",
-      [date, time],
+      [date, time]
     );
     const orderId = result.lastID;
 
@@ -195,7 +195,7 @@ server.post("/api/order", async function createOrder(req, res) {
       const { mealId, quantity } = item;
       await db.run(
         "INSERT INTO order_details (order_id, meal_id, quantity) VALUES (?, ?, ?)",
-        [orderId, mealId, quantity],
+        [orderId, mealId, quantity]
       );
     }
 
@@ -210,14 +210,13 @@ server.post("/api/order", async function createOrder(req, res) {
 });
 
 server.get("/api/past-orders", async function getPastOrders(req, res) {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   try {
     const page = parseInt(req.query.page, 10) || 1;
     const limit = 20;
     const offset = (page - 1) * limit;
     const pastOrders = await db.all(
       "SELECT order_id, date, time FROM orders ORDER BY order_id DESC LIMIT 10 OFFSET ?",
-      [offset],
+      [offset]
     );
     res.send(pastOrders);
   } catch (error) {
@@ -232,7 +231,7 @@ server.get("/api/past-order/:order_id", async function getPastOrder(req, res) {
   try {
     const order = await db.get(
       "SELECT order_id, date, time FROM orders WHERE order_id = ?",
-      [orderId],
+      [orderId]
     );
 
     if (!order) {
@@ -255,7 +254,7 @@ server.get("/api/past-order/:order_id", async function getPastOrder(req, res) {
         p.meal_type_id = t.meal_type_id
       WHERE 
         order_id = ?`,
-      [orderId],
+      [orderId]
     );
 
     const formattedOrderItems = orderItems.map((item) =>
@@ -263,12 +262,12 @@ server.get("/api/past-order/:order_id", async function getPastOrder(req, res) {
         image: `/public/img/${item.mealTypeId}.webp`,
         quantity: +item.quantity,
         price: +item.price,
-      }),
+      })
     );
 
     const total = formattedOrderItems.reduce(
       (acc, item) => acc + item.total,
-      0,
+      0
     );
 
     res.send({
