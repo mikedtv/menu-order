@@ -1,14 +1,19 @@
-import { useEffect, useState, useContext } from "react";
-import { CartContext } from "./contexts";
-import Cart from "./Cart";
-import Meal from "./Meal";
+import { useState, useEffect, useContext } from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { CartContext } from "../contexts";
+import Cart from "../Cart";
+import Meal from "../Meal";
+
+export const Route = createLazyFileRoute("/order")({
+  component: Order,
+});
 
 const intl = new Intl.NumberFormat("en-AU", {
   style: "currency",
   currency: "AUD",
 });
 
-export default function Order() {
+function Order() {
   const [mealTypes, setMealTypes] = useState([]);
   const [mealType, setMealType] = useState("pepperoni");
   const [mealSize, setMealSize] = useState("M");
