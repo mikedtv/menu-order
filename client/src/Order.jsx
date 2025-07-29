@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import Meal from "./Meal";
+import { useEffect, useState, useContext } from "react";
+import { CartContext } from "./contexts";
 import Cart from "./Cart";
+import Meal from "./Meal";
 
 const intl = new Intl.NumberFormat("en-AU", {
   style: "currency",
@@ -11,8 +12,8 @@ export default function Order() {
   const [mealTypes, setMealTypes] = useState([]);
   const [mealType, setMealType] = useState("pepperoni");
   const [mealSize, setMealSize] = useState("M");
-  const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useContext(CartContext);
 
   async function checkout() {
     setLoading(true);
