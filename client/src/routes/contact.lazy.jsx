@@ -19,6 +19,10 @@ function ContactRoute() {
     },
   });
 
+  if (mutation.isError) {
+    return <div>La policia nooo....</div>;
+  }
+
   return (
     <div className="contact">
       <h1>Contact Us</h1>
